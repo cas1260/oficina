@@ -1,0 +1,93 @@
+**********************************
+* SEQUECIA DE PRODUTO NO ESTOQUE *
+**********************************
+SAVE SCREEN TO VTELAP
+	SAVE SCREEN TO VLP
+	@ 10,10 CLEAR TO 12,35
+	@ 10,10 TO 12,35
+	@ 11,11 PROMPT "  Video   "
+	@ 11,23 PROMPT "Impressora"
+	MENU TO VO
+	RESTORE SCREEN FROM VLP
+		DO CASE
+			CASE VO=1
+				SET PRINTER TO EST1.PRN
+			CASE VO=2
+			 SAVE SCREEN TO VT
+				DO IMPR
+			 RESTORE SCREEN FROM VT
+			ENDCASE
+
+	IF LASTKEY()#27
+		USE PRODUTO INDEX PRODUTO2
+
+		SET DEVICE TO PRINT
+		IF VO=1
+			@ 00,00 SAY DATE()
+			CENTRA(00,00,80,"Relatorio de Produto")
+			@ 00,69 SAY TIME()
+			@ 01,00 SAY REPLICATE("-",80)
+			@ 02,00 SAY "Descrica                                 Codigo       Q. E."
+			@ 03,00 SAY REPLICATE("Í",80)
+			X=4
+			Q=0
+			DO WHILE .NOT. EOF()
+				VDESCRICAO = DESCRICAO
+*				VVALOR = VALOR
+				VCODIGO = CODP
+				VQTD = QTD
+				VCONT = CONT
+				IF VQTD > 0 
+					@ X,00 SAY LEFT(VDESCRICAO,30)
+					@ X,41 SAY VCODIGO
+					@ X,48 SAY VQTD
+					X=X+2
+					Q=Q+1
+				ENDIF
+				SKIP
+			ENDDO
+			@ X+2,00 SAY "TOTAL DE PRODUTO..: " +STR(Q)
+			SET DEVICE TO SCREEN 
+		IF VO=1
+			SET PRINTER TO 
+	      SWPRUNCMD("BROWSE EST1.PRN",0,"","")
+		ENDIF
+	ELSE
+			SET PRINTER TO LL
+		   SET DEVICE TO PRINT
+			@ 00,00 SAY DATE()
+			CENTRA(00,00,80,"Relatorio de Produto")
+			@ 00,69 SAY TIME()
+			@ 01,00 SAY REPLICATE("-",80)
+			@ 02,00 SAY "Q.C  Descri‡Æo     Codigo " 
+			@ 03,00 SAY REPLICATE("Í",80)
+			X=4
+			Q=0
+
+			DO WHILE .NOT. EOF()
+				VDESCRICAO = DESCRICAO
+				VVALOR =VALOR
+				VCODIGO = CODP
+				VQTD=QTD
+				VCONT=CONT
+				IF VQTD > 0 
+					@ X,00 SAY VQTD PICT "99"
+					@ X,03 SAY LEFT(VDESCRICAO,23)
+    				@ X,27 SAY VCODIGO
+					X=X+1
+					Q=Q+1
+				ENDIF
+				SKIP
+			ENDDO
+			@ X+2,00 SAY "TOTAL DE PRODUTO..: " +STR(Q)
+			@ 00,00 SAY ""
+			SET DEVICE TO SCREEN 
+         SWPRUNCMD("COPY LL.PRN LPT1",0,"","")					
+		IF VO=1
+			SET PRINTER TO 
+	      SWPRUNCMD("BROWSE EST.PRN",0,"","")
+		ENDIF
+	ENDIF
+ENDIF	
+RESTORE SCREEN FROM VTELAP
+RETURN

@@ -1,0 +1,3 @@
+T = DIRECTORY("*.*", "D")
+CLEAR
+@ 00,00 SAY T

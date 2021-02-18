@@ -1,0 +1,89 @@
+*****************************************
+*                                       *
+* EST4.PRG - APOIO                      *
+*                                       *
+*****************************************
+
+PRIVATE VTELA,VOPCAO,VOPCOES[5],VMSG[5]
+
+
+SAVE SCREEN TO VTELA 
+VOPCOES[1] = "Placa"
+VOPCOES[2] = "Nome"
+
+VMSG[1] = ""
+VMSG[2] = ""
+
+DO WHILE .T.
+	VSIM = .F.
+	VHELP = "ASPR1"	
+	VOPCAO = SUBMENU (2,VOPCOES,VMSG,2,37,.T.)
+	VHELP = "" 
+   SAVE SCREEN
+	SAVE SCREEN TO VLP
+	IF LASTKEY()#27 .OR. LASTKEY()#19
+		@ 10,10 CLEAR TO 12,35
+		@ 10,10 TO 12,35
+		@ 11,11 PROMPT "  Video   "
+		@ 11,23 PROMPT "Impressora"
+		MENU TO VO
+		RESTORE SCREEN FROM VLP
+			DO CASE
+				CASE VO=1
+					SET PRINTER TO EST.PRN
+					DO NEW411
+			      SWPRUNCMD("BROWSE EST.PRN",0,"","")
+				CASE VO=2
+				 SAVE SCREEN TO VT
+					DO IMPR
+					SET PRINTER TO 
+					DO NEW411
+				 RESTORE SCREEN FROM VT
+				ENDCASE
+		ENDIF
+DO CASE
+
+		CASE VOPCAO = 0
+			EXIT
+*		CASE VOPCAO = 1 
+*			USE CLIENTE INDEX CLIENTE1
+*			VTUDO="Relatorio Por Nome"
+*			DO REL
+*		CASE VOPCAO = 2 
+*			USE CLIENTE INDEX CLIENTE2
+*			VTUDO="Relatorio Por Placa"
+*			DO REL
+	ENDCASE	
+ENDDO
+RESTORE SCREEN FROM VTELA
+RETURN 
+PROCEDURE REL
+SAVE SCREEN TO VTELAV
+
+	IF LASTKEY()#27
+		SET DEVICE TO PRINT
+		@ 00,00 SAY DATE()
+		CENTRA(00,00,80,VTUDO)
+		@ 00,69 SAY TIME()
+		@ 01,00 SAY REPLICATE("-",80)
+		@ 02,00 SAY "Nome.....................................  Placa ..."
+		X=3
+		Q=0
+		DO WHILE .NOT. EOF()
+			VNOME  = NOME
+			VPLACA = PLACA
+			@ X,00 SAY VNOME
+			@ X,43 SAY VPLACA
+			X=X+1
+			SKIP
+			Q=Q+2
+		ENDDO
+		@ X+2,00 SAY "TOTAL DE CLIENTE.."+STR(Q)
+		SET DEVICE TO SCREEN 
+		IF VO=1
+			SET PRINTER TO 
+         SWPRUNCMD("BROWSE EST.PRN",0,"","")
+		ENDIF
+ENDIF
+RESTORE SCREEN FROM VTELAV
+RETURN

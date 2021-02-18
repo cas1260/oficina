@@ -1,0 +1,27 @@
+***************************
+* NEW 34.PRG ESCOLHA TELA *
+***************************
+SAVE SCREEN TO VTELA_TELA
+DO WHILE .T.
+		@ 10,24 CLEAR TO 18,56
+		@ 10,24 TO 18,56 DOUBLE
+		@ 11,26 SAY "( ) ±±±±±±±±±±±±±±±±±±±±±±±±±"
+		@ 12,26 SAY "( ) ÂÄÁÂÄÁÂÄÁÂÄÁÂÄÁÂÄÁÂÄÁÂÄÁÂ"
+		@ 13,26 SAY "( ) ÊËÍÊËÍÊËÍÊËÍÊËÍÊËÍÊËÍÊËÍÊ"
+		@ 14,26 SAY "( ) ±±±±±±±±±±±±±±±±±±±±±±±±±"
+   	@ 15,26 SAY "( ) ²²²²²²²²²²²²²²²²²²²²²²²²²"
+		@ 16,26 SAY "( ) °°°°°°°°°°°°°°°°°°°°°°°°°"
+		@ 17,26 SAY "( ) " + VNOME_CLEBER
+*		VOP = MENU(11,7,25,55,.T.,.T.)
+		VOP =	MENU_O(10,7,27,CHR(7),VAL(V_TELA))
+	IF VOP <> 0
+		USE CONFIG
+		REPLACE C WITH STR(VOP)
+		V_TELA = ALLTRIM(STR(VOP))
+		EXIT
+	ELSE 
+		EXIT
+	ENDIF
+ENDDO 
+RESTORE SCREEN FROM VTELA_TELA
+RETURN
